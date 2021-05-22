@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <link href="{{ url_for('static',filename='favicon.ico') }}" rel="shortcut icon">
+    <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/plugins/dataTables/datatables.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/animate.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static',filename='css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
+
+</head>
+
+<body{% if request.path == "/login" or request.path == "/modify_password" %} class="gray-bg"{% endif %}>
+
+    {% block frame %}
+
+    <div id="wrapper">
+
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ current_user.user_name }}</strong>
+                                 </span> <span class="text-muted text-xs block">{{ current_user.get_roles_names() }}<b class="caret"></b></span> </span> </a>
+                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                    <li><a href="{{ url_for('logout') }}">退出</a></li>
+                                </ul>
+                        </div>
+                    </li>
+                    {% block menu %}
+                    <li{{ (" class=\"active\"" if request.endpoint == "index" else "") | safe }}>
+                        <a href="{{ url_for('index') }}"><i class="fa fa-th-large"></i> <span class="nav-label">首页</span></a>
+                    </li>
+                    {% if admin_permission.can() or agent_permission.can() or seller_permission.can() %}
+                    <li{{ (" class=\"active\"" if request.endpoint == "operatelog" else "") | safe }}>
+                        <a href="{{ url_for('operatelog') }}"><i class="fa fa-laptop"></i> <span class="nav-label">操作记录</span> </a>
+                    </li>
+                    <li{{ (" class=\"active\"" if request.endpoint == "rechargelog" else "") | safe }}>
+                        <a href="{{ url_for('rechargelog') }}"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">销售记录</span> </a>
+                    </li>
+                    <li{{ (" class=\"active\"" if request.endpoint == "card" else "") | safe }}>
+                        <a href="{{ url_for('card') }}"><i class="fa fa-edit"></i> <span class="nav-label">点卡管理</span> </a>
+                    </li>
+                    {% endif %}
+                    {% if admin_permission.can() or agent_permission.can() %}
+                    <li{{ (" class=\"active\"" if request.endpoint == "cardtype" else "") | safe }}>
+                        <a href="{{ url_for('cardtype') }}"><i class="fa fa-pie-chart"></i> <span class="nav-label">卡类管理</span> </a>
+                    </li>
+                    <li{{ (" class=\"active\"" if request.endpoint == "software" else "") | safe }}>
+                        <a href="{{ url_for('software') }}"><i class="fa fa-desktop"></i> <span class="nav-label">软件管理</span> </a>
+                    </li>
+                    <li{{ (" class=\"active\"" if request.endpoint == "user" else "") | safe }}>
+                        <a href="{{ url_for('user') }}"><i class="fa fa-files-o"></i> <span class="nav-label">用户管理</span> </a>
+                    </li>
+                    <li{{ (" class=\"active\"" if request.endpoint == "admin" else "") | safe }}>
+                        <a href="{{ url_for('admin') }}"><i class="fa fa-sitemap"></i> <span class="nav-label">权限管理</span> </a>
+                    </li>
+                    {% endif %}
+                    {% if admin_permission.can() %}
+                    <li{{ (" class=\"active\"" if request.endpoint == "log" else "") | safe }}>
+                        <a href="{{ url_for('log') }}"><i class="fa fa-table"></i> <span class="nav-label">日志查看</span> </a>
+                    </li>
+                    <li{{ (" class=\"active\"" if request.endpoint == "setting" else "") | safe }}>
+                        <a href="{{ url_for('setting') }}"><i class="fa fa-database"></i> <span class="nav-label">系统配置</span> </a>
+                    </li>
+                    {% endif %}
+                    {% endblock %}
+                </ul>
+
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                        <form role="search" class="navbar-form-custom" method="post" action="#">
+                            <div class="form-group">
+                                <input type="text" value="{% block page_path %}{% endblock %}" class="form-control" name="top-search" id="top-search" readonly="readonly">
+                            </div>
+                        </form>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <a href="{{ url_for('logout') }}">
+                                <i class="fa fa-sign-out"></i> 退出
+                            </a>
+                        </li>
+                    </ul>
+
+                </nav>
+            </div>
+
+            {% block content %}{% endblock %}
+
+            {% block footer %}
+            <div class="footer">
+                <strong>Copyright</strong> Anonymous 2014-2020
+            </div>
+            {% endblock %}
+
+        </div>
+    </div>
+
+    {% endblock %}
+
+    <!-- Mainly scripts -->
+    <script src="{{ url_for('static',filename='js/jquery-2.1.1.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins/jeditable/jquery.jeditable.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins/dataTables/datatables.min.js') }}"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="{{ url_for('static',filename='js/inspinia.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins/pace/pace.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <!-- iCheck -->
+    <script src="{{ url_for('static',filename='js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+
+    <!-- Jquery Validate -->
+    <script src="{{ url_for('static',filename='js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins/validate/message_cn.js') }}"></script>
+    {% block validate %}{% endblock %}
+
+    <!-- Page-Level Scripts -->
+    <script src="{{ url_for('static',filename='js/other/jquery.form.js') }}"></script>
+    {% block script %}{% endblock %}
+
+    <!-- Chart -->
+    {% block chart %}{% endblock %}
+
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+{% extends "temp.html" %}
+
+{% block title %}SmartCard{% endblock %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>编辑软件</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform" class="form-horizontal" role="form" method="post" action="{{ url_for('card_modify') }}">
+                            <div class="form-group"><label class="col-sm-2 control-label">编号</label>
+                                <div class="col-sm-10">
+                                    <input name="id" type="text" class="form-control" value="{{ card.id }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">管理员</label>
+                                <div class="col-sm-10">
+                                    <input name="admin_id" type="text" class="form-control" value="{{ card.admin.user_name }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">类型</label>
+                                <div class="col-sm-10">
+                                    <input name="type_id" type="text" class="form-control" value="{{ card.card_type.get_name() }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">卡号</label>
+                                <div class="col-sm-10">
+                                    <input name="card_no" type="text" class="form-control" value="{{ card.card_no }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">密码</label>
+                                <div class="col-sm-10">
+                                    <input name="password" type="text" class="form-control" value="{{ card.password }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                                <div class="col-sm-10">
+                                    <input name="remark" type="text" class="form-control" value="{{ card.remark }}">
+                                </div>
+                            </div>
+{#                            <div class="hr-line-dashed"></div>#}
+{#                            <div class="form-group"><label class="col-sm-2 control-label">已用</label>#}
+{#                                <div class="col-sm-10">#}
+{#                                    <div class="i-checks">#}
+{#                                        <label><input name="is_used" type="checkbox" value="{{ 1 if card.is_used else 0 }}"{{ (" checked=\"checked\"" if card.is_used else "") | safe }}></label>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">启用</label>
+                                <div class="col-sm-10">
+                                    <div class="i-checks">
+                                        <label><input name="is_enable" type="checkbox" value="1"{{ (" checked=\"checked\"" if card.is_enable else "") | safe }}></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <input class="btn btn-white" type="button" onclick="javascript:history.go(-1)" value="返回">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage" style="display: none;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+
+{% block validate %}
+    <script>
+        $(document).ready(function () {
+            $("#myform").validate({
+                rules: {}
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            var options = {
+                target: '#formMessage',
+                beforeSubmit: showRequest,
+                success: showResponse
+            };
+
+            $('#myform').ajaxForm(options);
+        });
+
+        function showRequest(formData, jqForm, options) {
+            return true;
+        }
+
+        function showResponse(responseText, statusText, xhr, $form) {
+            if (responseText.indexOf("成功") != -1) {
+                $("#formMessage").removeClass().addClass("alert alert-success");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+            else {
+                $("#formMessage").removeClass().addClass("alert alert-danger");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+        }
+    </script>
+
+{% endblock %}

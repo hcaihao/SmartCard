@@ -1,0 +1,102 @@
+{% extends "temp.html" %}
+
+{% block title %}SmartCard{% endblock %}
+{% block page_path %}首页{% endblock %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>内存使用</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins">{{memory}}</h1>
+                            <small>{{memory_desc}}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>硬盘使用</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins">{{disk}}</h1>
+                            <small>{{disk_desc}}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>网络链接</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins">{{connect}}</h1>
+                            <small>{{connect_desc}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>开机时间</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins">{{date}}</h1>
+                            <small>{{date_desc}}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>IP查询</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <form id="myform" role="form" method="post" class="form-horizontal" action="/index/ip">
+                                <div class="input-group">
+                                    <input name="ip" type="text" class="form-control">
+                                    <span class="input-group-btn"><button type="submit" class="btn btn-primary">查询</button></span>
+                                </div>
+                            </form>
+                            <div id="formMessage" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            var options = {
+                target: '#formMessage',   // target element(s) to be updated with server response
+                beforeSubmit: showRequest,  // pre-submit callback
+                success: showResponse,  // post-submit callback
+            };
+
+            $('#myform').ajaxForm(options);
+        });
+
+        function showRequest(formData, jqForm, options) {
+            return true;
+        }
+
+        function showResponse(responseText, statusText, xhr, $form) {
+            if (responseText != "") {
+                $("#formMessage").removeClass().addClass("alert alert-success");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+        }
+    </script>
+{% endblock %}

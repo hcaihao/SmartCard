@@ -1,0 +1,213 @@
+{% extends "temp.html" %}
+
+{% block title %}SmartCard{% endblock %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>编辑用户</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform" class="form-horizontal" role="form" method="post" action="{{ url_for('user_modify') }}">
+                            <div class="form-group"><label class="col-sm-2 control-label">编号</label>
+                                <div class="col-sm-10">
+                                    <input name="id" type="text" class="form-control" value="{{ user.id }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">软件名称</label>
+                                <div class="col-sm-10">
+                                    <input name="software_name" type="text" class="form-control" value="{{ user.software.name }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">用户名</label>
+                                <div class="col-sm-10">
+                                    <input name="user_name" type="text" class="form-control" value="{{ user.user_name }}" readonly="readonly">
+                                </div>
+                            </div>
+{#                            <div class="hr-line-dashed"></div>#}
+{#                            <div class="form-group"><label class="col-sm-2 control-label">密码</label>#}
+{#                                <div class="col-sm-10">#}
+{#                                    <input name="password" type="text" class="form-control" value="{{ user.password }}" readonly="readonly">#}
+{#                                </div>#}
+{#                            </div>#}
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">密保问题</label>
+                                <div class="col-sm-10">
+                                    <input name="password_question" type="text" class="form-control" value="{{ user.password_question }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">密保答案</label>
+                                <div class="col-sm-10">
+                                    <input name="password_answer" type="text" class="form-control" value="{{ user.password_answer }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">QQ</label>
+                                <div class="col-sm-10">
+                                    <input name="qq" type="text" class="form-control" value="{{ user.qq }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">Email</label>
+                                <div class="col-sm-10">
+                                    <input name="email" type="text" class="form-control" value="{{ user.email }}">
+                                </div>
+                            </div>
+                        <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">手机</label>
+                                <div class="col-sm-10">
+                                    <input name="phone" type="text" class="form-control" value="{{ user.phone }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">版本</label>
+                                <div class="col-sm-10">
+                                    <input name="version" type="text" class="form-control" value="{{ user.version }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">机器码</label>
+                                <div class="col-sm-10">
+                                    <input name="serial_no" type="text" class="form-control" value="{{ user.serial_no }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">Token</label>
+                                <div class="col-sm-10">
+                                    <input name="guid" type="text" class="form-control" value="{{ user.token }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">最大客户端</label>
+                                <div class="col-sm-10">
+                                    <input name="client_count" type="number" class="form-control" value="{{ user.client_count }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">在线客户端</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="software_id">
+                                        {% for client in user.clients %}
+                                            {% if client.is_online() %}
+                                                <option value="{{ client.client_no }}">{{ "{}----{}----{}----{}".format(client.client_no, client.client_info, client.client_version, client.host_name) }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">绑定机器</label>
+                                <div class="col-sm-10">
+                                    <div class="i-checks">
+                                        <label><input name="is_bind" type="checkbox" value="1"{{ (" checked=\"checked\"" if user.is_bind else "") | safe }}></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                                <div class="col-sm-10">
+                                    <input name="remark" type="text" class="form-control" value="{{ user.remark }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">解绑时间</label>
+                                <div class="col-sm-10">
+                                    <input name="unbind_date" type="text" class="form-control" value="{{ user.unbind_date }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">到期时间</label>
+                                <div class="col-sm-10">
+                                    <input name="terminate_date" type="text" class="form-control m-b" value="{{ user.terminate_date }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">启用</label>
+                                <div class="col-sm-10">
+                                    <div class="i-checks">
+                                        <label><input name="is_enable" type="checkbox" value="1"{{ (" checked=\"checked\"" if user.is_enable else "") | safe }}></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <input class="btn btn-white" type="button" onclick="javascript:history.go(-1)" value="返回">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage" style="display: none;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+
+{% block validate %}
+    <script>
+        $(document).ready(function () {
+            $("#myform").validate({
+                rules: {
+                   client_count: {
+                        required: true,
+                        digits: true,
+                        min:1,
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            var options = {
+                target: '#formMessage',
+                beforeSubmit: showRequest,
+                success: showResponse
+            };
+
+            $('#myform').ajaxForm(options);
+        });
+
+        function showRequest(formData, jqForm, options) {
+            return true;
+        }
+
+        function showResponse(responseText, statusText, xhr, $form) {
+            if (responseText.indexOf("成功") != -1) {
+                $("#formMessage").removeClass().addClass("alert alert-success");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+            else {
+                $("#formMessage").removeClass().addClass("alert alert-danger");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+        }
+    </script>
+
+{% endblock %}

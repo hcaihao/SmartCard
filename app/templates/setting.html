@@ -1,0 +1,286 @@
+{% extends "temp.html" %}
+
+{% block title %}SmartCard{% endblock %}
+{% block page_path %}首页{% endblock %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>系统配置</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform" role="form" method="post" class="form-horizontal" action="/setting/modify">
+                            <div class="form-group"><label class="col-sm-2 control-label">本站域名</label>
+                                <div class="col-sm-10"><input name="domain" type="text" class="form-control" value="{{ domain }}"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">日志匹配</label>
+                                <div class="col-sm-10"><input name="ua_regex" type="text" class="form-control" value="{{ ua_regex }}"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">加密密钥</label>
+                                <div class="col-sm-10"><input name="des_key" type="text" class="form-control" value="{{ des_key }}"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">启用加密</label>
+                                <div class="col-sm-10">
+                                    <div class="i-checks">
+                                        <label><input name="is_encrypt" type="checkbox" value="1"{{ (" checked=\"checked\"" if is_encrypt else "") | safe }}></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">站点维护</label>
+                                <div class="col-sm-10">
+                                    <div class="i-checks">
+                                        <label><input name="is_offline" type="checkbox" value="1"{{ (" checked=\"checked\"" if is_offline else "") | safe }}></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>备份数据</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform4" role="form" method="post" class="form-horizontal" action="/setting/backup">
+                            <div class="form-group"><label class="col-sm-2 control-label">备份结果</label>
+                                <div class="col-sm-10">
+                                    <textarea id="backup_result" name="backup_result" class="form-control" style="height:120px" readonly="readonly"></textarea>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+
+                        </form>
+                        <div id="formMessage4" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>执行SQL</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform2" role="form" method="post" class="form-horizontal"  action="/setting/exe_sql">
+                            <div class="form-group"><label class="col-sm-2 control-label">SQL语句</label>
+                                <div class="col-sm-10">
+                                    <textarea id="sql_cmd" name="sql_cmd" class="form-control" style="height:80px"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">执行结果</label>
+                                <div class="col-sm-10">
+                                    <textarea id="sql_result" name="sql_result" class="form-control" style="height:200px" readonly="readonly"></textarea>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" id="exe_sql" type="submit">执行</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage2" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>执行Python</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform3" role="form" method="post" class="form-horizontal"  action="/setting/exe_python">
+                            <div class="form-group"><label class="col-sm-2 control-label">Python语句</label>
+                                <div class="col-sm-10">
+                                    <textarea id="python_cmd" name="python_cmd" class="form-control" style="height:200px"></textarea><input id="is_enable" name="is_enable" type="hidden" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-2 control-label">执行结果</label>
+                                <div class="col-sm-10">
+                                    <textarea id="python_result" name="python_result" class="form-control" style="height:80px" readonly="readonly"></textarea><input id="is_enable" name="is_enable" type="hidden" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" id="exe_python" type="submit">执行</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage3" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block validate %}
+    <script>
+        var formValidator = null
+        $(document).ready(function () {
+
+            formValidator = $("#myform").validate({
+                rules: {
+                    des_key: {
+                        required: true
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            var options = {
+                target: '#formMessage',   // target element(s) to be updated with server response
+                beforeSubmit: showRequest,  // pre-submit callback
+                success: showResponse,  // post-submit callback
+            };
+
+            $('#myform').ajaxForm(options);
+        });
+
+        function showRequest(formData, jqForm, options) {
+            return true;
+        }
+
+        function showResponse(responseText, statusText, xhr, $form) {
+            if (responseText.indexOf("成功") != -1) {
+                $("#formMessage").removeClass().addClass("alert alert-success");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+            else {
+                $("#formMessage").removeClass().addClass("alert alert-danger");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+        }
+
+
+        $(document).ready(function () {
+            var options2 = {
+                target: '#formMessage2',   // target element(s) to be updated with server response
+                beforeSubmit: showRequest2,  // pre-submit callback
+                success: showResponse2,  // post-submit callback
+            };
+
+            $('#myform2').ajaxForm(options2);
+        });
+
+        function showRequest2(formData, jqForm, options) {
+            $("#sql_result").val("");
+            return true;
+        }
+
+        function showResponse2(responseText, statusText, xhr, $form) {
+            if (responseText != "") {
+                $("#formMessage2").removeClass().addClass("alert alert-success");
+                $("#formMessage2").show();
+                $("#formMessage2").text("提交成功!");
+                $("#sql_result").val(responseText);
+            }
+        }
+
+
+
+        $(document).ready(function () {
+            var options3 = {
+                target: '#formMessage3',   // target element(s) to be updated with server response
+                beforeSubmit: showRequest3,  // pre-submit callback
+                success: showResponse3,  // post-submit callback
+            };
+
+            $('#myform3').ajaxForm(options3);
+        });
+
+        function showRequest3(formData, jqForm, options) {
+            $("#python_result").val("");
+            return true;
+        }
+
+        function showResponse3(responseText, statusText, xhr, $form) {
+            if (responseText != "") {
+                $("#formMessage3").removeClass().addClass("alert alert-success");
+                $("#formMessage3").show();
+                $("#formMessage3").text("提交成功!");
+                $("#python_result").val(responseText);
+            }
+        }
+
+
+        $(document).ready(function () {
+            var options4 = {
+                target: '#formMessage4',   // target element(s) to be updated with server response
+                beforeSubmit: showRequest4,  // pre-submit callback
+                success: showResponse4,  // post-submit callback
+            };
+
+            $('#myform4').ajaxForm(options4);
+        });
+
+        function showRequest4(formData, jqForm, options) {
+            $("#backup_result").val("");
+            return true;
+        }
+
+        function showResponse4(responseText, statusText, xhr, $form) {
+            if (responseText != "") {
+                $("#formMessage4").removeClass().addClass("alert alert-success");
+                $("#formMessage4").show();
+                $("#formMessage4").text("提交成功!");
+                $("#backup_result").val(responseText);
+            }
+        }
+    </script>
+{% endblock %}

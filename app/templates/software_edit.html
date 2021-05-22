@@ -1,0 +1,190 @@
+{% extends "temp.html" %}
+
+{% block title %}SmartCard{% endblock %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>编辑软件</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform" class="form-horizontal" role="form" method="post" action="{{ url_for('software_modify') }}">
+                            <div class="form-group"><label class="col-sm-2 control-label">编号</label>
+                                <div class="col-sm-10">
+                                    <input name="id" type="text" class="form-control" value="{{ software.id }}" readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">名称
+                                <small class="text-navy">（唯一）</small>
+                            </label>
+                                <div class="col-sm-10">
+                                    <input name="name" type="text" class="form-control" value="{{ software.name }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">注册赠送时间</label>
+                                <div class="col-sm-10">
+                                    <input name="register_hour" type="number" class="form-control" value="{{ software.register_hour }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">解绑扣除时间</label>
+                                <div class="col-sm-10">
+                                    <input name="unbind_hour" type="number" class="form-control" value="{{ software.unbind_hour }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">解绑冷却时间</label>
+                                <div class="col-sm-10">
+                                    <input name="wait_hour" type="number" class="form-control" value="{{ software.wait_hour }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">客户端限制</label>
+                                <div class="col-sm-10">
+                                    <input name="client_count" type="number" class="form-control" value="{{ software.client_count }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">绑定机器</label>
+                                <div class="col-sm-10">
+                                    <div class="i-checks">
+                                        <label><input name="is_bind" type="checkbox" value="1"{{ (" checked=\"checked\"" if software.is_bind else "") | safe }}></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">公告</label>
+                                <div class="col-sm-10">
+                                    <textarea name="message" class="form-control" style="height:200px">{{ software.message }}</textarea>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">脚本</label>
+                                <div class="col-sm-10">
+                                    <textarea name="script" class="form-control" style="height:300px">{{ software.script }}</textarea>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">登录版本
+                                <small class="text-navy">（留空不限制最低版本号）</small>
+                            </label>
+                                <div class="col-sm-10">
+                                    <input name="version" type="text" class="form-control" value="{{ software.version }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">最新版本</label>
+                                <div class="col-sm-10">
+                                    <input name="new_version" type="text" class="form-control" value="{{ software.new_version }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">下载网址</label>
+                                <div class="col-sm-10">
+                                    <input name="new_url" type="text" class="form-control" value="{{ software.new_url }}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">启用</label>
+                                <div class="col-sm-10">
+                                    <div class="i-checks">
+                                        <label><input name="is_enable" type="checkbox" value="1"{{ (" checked=\"checked\"" if software.is_enable else "") | safe }}></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <input class="btn btn-white" type="button" onclick="javascript:history.go(-1)" value="返回">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage" style="display: none;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+
+{% block validate %}
+    <script>
+        $(document).ready(function () {
+            $("#myform").validate({
+                rules: {
+                    register_hour: {
+                        required: true,
+                        digits: true,
+                        min:0,
+                    },
+                    unbind_hour: {
+                        required: true,
+                        digits: true,
+                        min:0,
+                    },
+                    wait_hour: {
+                        required: true,
+                        digits: true,
+                        min:0,
+                    },
+                    client_count: {
+                        required: true,
+                        digits: true,
+                        min:1,
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            var options = {
+                target: '#formMessage',
+                beforeSubmit: showRequest,
+                success: showResponse
+            };
+
+            $('#myform').ajaxForm(options);
+        });
+
+        function showRequest(formData, jqForm, options) {
+            return true;
+        }
+
+        function showResponse(responseText, statusText, xhr, $form) {
+            if (responseText.indexOf("成功") != -1) {
+                $("#formMessage").removeClass().addClass("alert alert-success");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+            else {
+                $("#formMessage").removeClass().addClass("alert alert-danger");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+        }
+    </script>
+
+{% endblock %}

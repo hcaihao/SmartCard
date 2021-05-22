@@ -1,0 +1,340 @@
+{% extends "temp.html" %}
+
+{% block title %}SmartCard{% endblock %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>点卡列表</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTables-card" width="100%">
+                                <thead>
+                                <tr>
+                                    <th>编号</th>
+                                    <th>管理员</th>
+                                    <th>类型</th>
+                                    <th>卡号</th>
+                                    <th>密码</th>
+                                    <th>备注</th>
+                                    <th>已用</th>
+                                    <th>启用</th>
+                                    <th>过期时间</th>
+                                    <th>更新时间</th>
+                                    <th>创建时间</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>生成点卡</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform" role="form" method="post" class="form-horizontal" action="/card/generate">
+                            <div class="form-group"><label class="col-sm-2 control-label">类型</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="card_type_id">
+                                        <option value=""></option>
+                                        {% for card_type in card_types %}
+                                        <option value="{{ card_type.id }}">{{ card_type.get_name() }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">数量</label>
+                                <div class="col-sm-10"><input name="amount" type="digits" class="form-control"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"><label class="col-sm-2 control-label">备注</label>
+                                <div class="col-sm-10"><input name="remark" type="text" class="form-control"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>点卡管理</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="myform2" role="form" method="post" class="form-horizontal" action="#">
+                            <div class="form-group"><label class="col-sm-2 control-label">点卡列表</label>
+                                <div class="col-sm-10">
+                                    <textarea id="card_list" name="card_list" class="form-control" style="height:100px"></textarea><input id="is_enable" name="is_enable" type="hidden" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" id="batch_disable" type="submit">禁用</button>
+                                    <button class="btn btn-primary" id="batch_enable" type="submit">启用</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="formMessage2" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{% block validate %}
+    <script>
+        $(document).ready(function () {
+
+            $("#myform").validate({
+                rules: {
+                    card_type_id: {
+                        required: true
+                    },
+                    amount: {
+                        required: true,
+                        digits: true
+                    }
+                }
+            });
+
+            $("#myform2").validate({
+                rules: {
+                    card_list: {
+                        required: true
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        //http://datatables.club/upgrade/1.10-convert.html
+        $(document).ready(function () {
+            $('.dataTables-card').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '../card/query',
+                searching: true,	//搜索栏
+                ordering: true,	//是否支持排序功能
+                info: true,	//显示表格信息
+                paging: true,	//是否显示页码
+                pageLength: 25,
+                order: [[0, 'desc']],
+
+                language: {
+                    paginate: {
+                        first: "首页",
+                        last: "尾页",
+                        previous: "上一页",
+                        next: "下一页"
+                    },
+                    lengthMenu: "每页显示 _MENU_ 条记录",
+                    zeroRecords: "没有匹配记录",
+                    info: "显示 _START_ - _END_ 共 _TOTAL_ 条记录",
+                    infoEmpty: "显示 0 - 0 共 0 条记录",
+                    infoFiltered: "（从 _MAX_ 条数据中检索）",
+                    search: "搜索：",
+                    loadingRecords: "载入中...",
+                    processing: "处理中...",
+                    buttons: {
+                        copyTitle: '复制成功',
+                        copyKeys: '按 <i>ctrl</i> 或 <i>\u2318</i> + <i>C</i> 复制<br>到剪贴板.<br><br>点击此消息或按ESC键取消.',
+                        copySuccess: {
+                            _: '复制 %d 条记录到剪贴板',
+                            1: '复制 1 条记录到剪贴板'
+                        }
+                    }
+                },
+
+                columnDefs: [
+                    {
+                        targets: 0,	//对哪一列操作
+                        name: "cards.id",
+                        render: function (data, type, row) {
+                            return '<a href="/card/edit?id=' + data + '">' + data + '</a>';
+                        },
+                    },
+                    {
+                        targets: 1,
+                        name: "admins.user_name",
+                    },
+                    {
+                        targets: 2,
+                        name: "card_types.id",
+                    },
+                    {
+                        targets: 3,
+                        name: "cards.card_no",
+                    },
+                    {
+                        targets: 4, //密码
+                        name: "cards.password",
+                        visible: false,
+                        searchable: false
+                    },
+                    {
+                        targets: 5,
+                        name: "cards.remark",
+                    },
+                    {
+                        targets: 6,
+                        name: "cards.is_used",
+                    },
+                    {
+                        targets: 7,
+                        name: "cards.is_enable",
+                    },
+                    {
+                        targets: 8,
+                        name: "card_types.expired_day",
+                        orderable: false,
+                    },
+                    {
+                        targets: 9,
+                        name: "cards.update_time",
+                    },
+                    {
+                        targets: 10,
+                        name: "cards.create_time",
+                    },
+                ],
+
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {extend: 'copy', text: '复制'},
+                    {extend: 'csv', title: '点卡列表'},
+                    {extend: 'excel', title: '点卡列表'},
+                    {extend: 'pdf', title: '点卡列表'},
+                    {
+                        extend: 'print', text: '打印', title: '点卡列表',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]
+            });
+
+        });
+
+    </script>
+
+    <script>
+        $('#batch_enable').click(function () {
+            $('#myform2').attr('action', '/card/set_enable_batch');
+            $('#is_enable').val("1");
+        });
+        $('#batch_disable').click(function () {
+            $('#myform2').attr('action', '/card/set_enable_batch');
+            $('#is_enable').val("0");
+        });
+
+        $(document).ready(function () {
+            var options = {
+                target: '#formMessage',   // target element(s) to be updated with server response
+                beforeSubmit: showRequest,  // pre-submit callback
+                success: showResponse,  // post-submit callback
+            };
+
+            $('#myform').ajaxForm(options);
+        });
+
+        function showRequest(formData, jqForm, options) {
+            return true;
+        }
+
+        function showResponse(responseText, statusText, xhr, $form) {
+            if (responseText.indexOf("成功") != -1) {
+                $("#formMessage").removeClass().addClass("alert alert-success");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+            else {
+                $("#formMessage").removeClass().addClass("alert alert-danger");
+                $("#formMessage").text(responseText);
+                $("#formMessage").show();
+            }
+
+            $('.dataTables-card').DataTable().ajax.reload();
+        }
+
+
+        $(document).ready(function () {
+            var options2 = {
+                target: '#formMessage2',   // target element(s) to be updated with server response
+                beforeSubmit: showRequest2,  // pre-submit callback
+                success: showResponse2,  // post-submit callback
+            };
+
+            $('#myform2').ajaxForm(options2);
+        });
+
+        function showRequest2(formData, jqForm, options) {
+            return true;
+        }
+
+        function showResponse2(responseText, statusText, xhr, $form) {
+            if (responseText != "") {
+                $("#formMessage2").removeClass().addClass("alert alert-success");
+                $("#formMessage2").show();
+                $("#formMessage2").text("提交成功!");
+                $("#card_list").val(responseText);
+            }
+        }
+    </script>
+{% endblock %}
