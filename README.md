@@ -15,15 +15,15 @@
 * 一键备份数据库，秘钥修改，web执行sql，web执行python
 
 # 依赖库
-pip install flask
-pip install flask-sqlalchemy
-pip install flask_login
-pip install flask_principal
-pip install PyMySQL
-pip install redis
-pip install IP2Location
-pip install pycryptodome
-...
+* pip install flask
+* pip install flask-sqlalchemy
+* pip install flask_login
+* pip install flask_principal
+* pip install PyMySQL
+* pip install redis
+* pip install IP2Location
+* pip install pycryptodome
+* ...
 
 # 功能演示
 ![image](https://github.com/hcaihao/SmartCard/blob/master/Demo.png)
