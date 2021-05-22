@@ -14,5 +14,16 @@
 * 用户行为日志查看（定位用户国家、省、市、请求接口、参数、返回数据）
 * 一键备份数据库，秘钥修改，web执行sql，web执行python
 
+# 依赖库
+pip install flask
+pip install flask-sqlalchemy
+pip install flask_login
+pip install flask_principal
+pip install PyMySQL
+pip install redis
+pip install IP2Location
+pip install pycryptodome
+...
+
 # 功能演示
-![image](https://github.com/hcaihao/SmartPython/blob/main/demo.gif)
+![image](https://github.com/hcaihao/SmartCard/blob/master/Demo.png)
