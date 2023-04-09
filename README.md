@@ -27,3 +27,22 @@
 
 # 功能演示
 ![image](https://github.com/hcaihao/SmartCard/blob/master/Demo.png)
+
+
+
+# Introduction
+A streamlined and powerful multi-level distribution and smart card system based on the Flask framework. The design features module separation, easy expansion, and three-tier proxy permissions. Technical exchange: 6850825@qq.com.
+
+# Features
+* Three-tier permission management: administrator, general agent, sales (isolated permissions of the same level, superiors can see all smart cards of subordinates)
+* Can create multiple software (name, registration gift time, unbinding deduction time, unbinding cooldown time, client restrictions, machine binding, announcements, scripts, login version, latest version, download URL, administrator, enable)
+* Can create card types (software name, card days, expiration days, price, enable)
+* Smart card management (administrator, type, card number, remarks, used, enabled, expiration time)
+* Registered user management (software name, username, QQ, email, phone, version, machine code, token, online/max clients, machine binding, remarks, unbinding time, expiration time, enabled)
+* View sales records (card type, card number, remarks, price, username, sales, creation time)
+* Sales amount displayed in graphical form (bar chart for the past 30 days)
+* Batch operation of smart cards (generate, remark, enable, disable)
+* Management operation records (management login, smart card generation, information modification, increase/decrease days, etc.)
+* Management permission modification, can modify software authorization, and add subordinate accounts
+* View user behavior logs (locate user country, province, city, request interface, parameters, return data)
+* One-click database backup, key modification, web execution of SQL, web execution of Python
